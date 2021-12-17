@@ -1,0 +1,102 @@
+[
+	{
+		"exp_name": "SinGAN+interp-zp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_interp-zp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+zp-interp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_zp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+interp-interp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_interp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name":"SinGAN+zp-zp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_zp-zp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+
+	{
+		"exp_name": "SinGAN+csg+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-interp-interp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-interp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-zp-interp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-zp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-interp-zp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-interp-zp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-zp-zp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-zp-zp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+
+	{
+		"exp_name": "SinGAN+spe+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-interp-interp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-interp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-zp-interp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-zp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-interp-zp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-interp-zp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-zp-zp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-zp-zp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"64"
+		}
+	}
+]
