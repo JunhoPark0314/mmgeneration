@@ -2,6 +2,7 @@
 import mmcv
 import numpy as np
 import torch
+import math
 from torch.utils.data import Dataset
 
 from .builder import DATASETS
@@ -20,16 +21,16 @@ def create_real_pyramid(real, min_size, max_size, scale_factor_init):
         max_size (int): The maximum size for the image pyramid.
         scale_factor_init (float): The initial scale factor.
     """
-
+ 
     num_scales = int(
-        np.ceil(
-            np.log(
-                np.power(min_size / min(real.shape[0], real.shape[1]), 1),
+        math.ceil(
+            math.log(
+                math.pow(min_size / min(real.shape[0], real.shape[1]), 1),
                 scale_factor_init))) + 1
 
     scale2stop = int(
-        np.ceil(
-            np.log(
+        math.ceil(
+            math.log(
                 min([max_size, max([real.shape[0], real.shape[1]])]) /
                 max([real.shape[0], real.shape[1]]), scale_factor_init)))
 
@@ -42,8 +43,8 @@ def create_real_pyramid(real, min_size, max_size, scale_factor_init):
         1 / (stop_scale))
 
     scale2stop = int(
-        np.ceil(
-            np.log(
+        math.ceil(
+            math.log(
                 min([max_size, max([real.shape[0], real.shape[1]])]) /
                 max([real.shape[0], real.shape[1]]), scale_factor_init)))
     stop_scale = num_scales - scale2stop

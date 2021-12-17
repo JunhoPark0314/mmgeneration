@@ -1,7 +1,8 @@
-_base_ = ['../singan/singan_bohemian.py']
+_base_ = ['../singan/singan_colusseum.py']
 
 embedding_dim = 4
-num_scales = 10  # start from zero
+num_scales = 8  # start from zero
+
 model = dict(
     type='PESinGAN',
     generator=dict(
@@ -20,13 +21,3 @@ model = dict(
     discriminator=dict(num_scales=num_scales))
 
 train_cfg = dict(first_fixed_noises_ch=embedding_dim * 2)
-
-data = dict(
-    train=dict(
-        img_path='./data/singan/fish.jpg',
-        min_size=25,
-        max_size=300,
-    ))
-
-dist_params = dict(backend='nccl', port=28119)
-total_iters = 22000

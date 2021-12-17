@@ -1,5 +1,4 @@
-_base_ = ['../singan/singan_balloons.py']
-
+_base_ = ['../singan/singan_colusseum.py']
 model = dict(
     type='PESinGAN',
     generator=dict(
@@ -7,4 +6,4 @@ model = dict(
 
 train_cfg = dict(fixed_noise_with_pad=True)
 
-dist_params = dict(backend='nccl', port=23019)
+#dist_params = dict(backend='nccl', port=23019)

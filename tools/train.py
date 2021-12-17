@@ -19,7 +19,10 @@ from mmgen.utils import collect_env, get_root_logger
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a GAN model')
-    parser.add_argument('config', help='train config file path')
+    parser.add_argument('config', 
+        help='train config file path',
+        type=str,
+        )
     parser.add_argument('--work-dir', help='the dir to save logs and models')
     parser.add_argument(
         '--resume-from', help='the checkpoint file to resume from')
@@ -67,6 +70,7 @@ def main():
     args = parse_args()
 
     cfg = Config.fromfile(args.config)
+
     if args.cfg_options is not None:
         cfg.merge_from_dict(args.cfg_options)
     # import modules from string list.
@@ -97,6 +101,7 @@ def main():
         distributed = False
     else:
         distributed = True
+        cfg.dist_params['rank'] = args.local_rank
         init_dist(args.launcher, **cfg.dist_params)
         # re-set gpu_ids with distributed training mode
         _, world_size = get_dist_info()
@@ -157,6 +162,8 @@ def main():
         validate=(not args.no_validate),
         timestamp=timestamp,
         meta=meta)
+    
+    
 
 
 if __name__ == '__main__':

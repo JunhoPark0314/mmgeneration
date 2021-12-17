@@ -196,3 +196,5 @@ def train_model(model,
     elif cfg.load_from:
         runner.load_checkpoint(cfg.load_from)
     runner.run(data_loaders, cfg.workflow, cfg.total_iters)
+
+    os.makedirs(os.path.join(cfg.work_dir,'final'),exist_ok=True)

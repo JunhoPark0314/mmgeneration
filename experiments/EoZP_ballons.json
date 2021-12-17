@@ -1,0 +1,102 @@
+[
+	{
+		"exp_name": "SinGAN+interp-zp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_interp-zp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+zp-interp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_zp-interp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+interp-interp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_interp-interp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name":"SinGAN+zp-zp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_zp-zp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+
+	{
+		"exp_name": "SinGAN+csg+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-interp-interp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-interp-interp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-zp-interp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-zp-interp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-interp-zp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-interp-zp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+csg-zp-zp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_csg-zp-zp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+
+	{
+		"exp_name": "SinGAN+spe+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-interp-interp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-interp-interp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-zp-interp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-zp-interp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-interp-zp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-interp-zp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	},
+	{
+		"exp_name": "SinGAN+spe-zp-zp+balloons",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/singan_spe-zp-zp_balloons.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"16"
+		}
+	}
+]
