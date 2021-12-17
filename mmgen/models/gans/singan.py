@@ -307,6 +307,7 @@ class SinGAN(BaseGAN):
                     data_batch['input_sample'],
                     self.fixed_noises,
                     self.noise_weights,
+                    num_batches=max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 4),
                     rand_mode='rand',
                     curr_scale=self.curr_stage)
 
@@ -349,6 +350,7 @@ class SinGAN(BaseGAN):
                 data_batch['input_sample'],
                 self.fixed_noises,
                 self.noise_weights,
+                num_batches=max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 4),
                 rand_mode='rand',
                 curr_scale=self.curr_stage)
             disc_pred_fake_g = self.discriminator(

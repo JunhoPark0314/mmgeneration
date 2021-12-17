@@ -140,6 +140,8 @@ def main():
     meta['seed'] = args.seed
     meta['exp_name'] = osp.basename(args.config)
 
+    cfg.train_cfg['num_batches'] = cfg.data.samples_per_gpu
+
     model = build_model(
         cfg.model, train_cfg=cfg.train_cfg, test_cfg=cfg.test_cfg)
 
