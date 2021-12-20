@@ -86,7 +86,7 @@ class SinGANDataset(Dataset):
         assert mmcv.is_filepath(self.img_path)
         self.load_annotations(min_size, max_size, scale_factor_init)
         self.num_samples = num_samples
-
+ 
     def load_annotations(self, min_size, max_size, scale_factor_init):
         """Load annatations for SinGAN Dataset.
 

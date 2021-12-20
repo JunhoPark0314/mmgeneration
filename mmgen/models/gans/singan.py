@@ -297,8 +297,13 @@ class SinGAN(BaseGAN):
             # here we do not padding fixed noises
             self.construct_fixed_noises()
 
+        curr_num_batches = max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 32)
+        self.reals = [real[:curr_num_batches] for real in self.reals]
+        data_batch['input_sample'] = data_batch['input_sample'][:curr_num_batches]
+ 
         # disc training
         set_requires_grad(self.discriminator, True)
+
         for _ in range(self.train_cfg['disc_steps']):
             optimizer['discriminator'].zero_grad()
             # TODO: add noise sampler to customize noise sampling
@@ -307,7 +312,7 @@ class SinGAN(BaseGAN):
                     data_batch['input_sample'],
                     self.fixed_noises,
                     self.noise_weights,
-                    num_batches=max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 4),
+                    num_batches=curr_num_batches,
                     rand_mode='rand',
                     curr_scale=self.curr_stage)
 
@@ -350,7 +355,7 @@ class SinGAN(BaseGAN):
                 data_batch['input_sample'],
                 self.fixed_noises,
                 self.noise_weights,
-                num_batches=max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 4),
+                num_batches=curr_num_batches,
                 rand_mode='rand',
                 curr_scale=self.curr_stage)
             disc_pred_fake_g = self.discriminator(
