@@ -513,7 +513,7 @@ class PENFSinGAN(SinGAN):
         init_res = data_batch["input_sample"]
         if sample_mode == "rand":
             noise = [torch.randn(self.curr_num_batches, *fn.shape[1:]).to(init_res).detach() 
-                        for fn in self.fixed_noises]
+                        for i, fn in enumerate(self.fixed_noises) if i <= self.curr_stage]
         elif sample_mode == "recon":
             noise = self.fixed_noises
         else:
