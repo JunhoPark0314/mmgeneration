@@ -74,7 +74,7 @@ class SinGANDataset(Dataset):
             we use may be a little bit different from this value.
         num_samples (int, optional): The number of samples (length) in this
             dataset. Defaults to -1.
-    """
+    """ 
 
     def __init__(self,
                  img_path,

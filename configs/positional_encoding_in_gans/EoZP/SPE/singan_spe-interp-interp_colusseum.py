@@ -1,15 +1,14 @@
-_base_ = ['../../singan/singan_colusseum.py']
+_base_ = ['../../../singan/singan_colusseum.py']
 
 embedding_dim = 4
 num_scales = 8  # start from zero
 
 model = dict(
-    type='PESinGAN',
+    type='PENFSinGAN',
     generator=dict(
-        type='SinGANMSGeneratorPE',
+        type='SinGANMSGeneratorPENF',
         num_scales=num_scales,
-        padding=1,
-        pad_at_head=False,
+        padding=0,
         first_stage_in_channels=embedding_dim * 2,
         positional_encoding=dict(
             type='SPE',
@@ -18,6 +17,11 @@ model = dict(
             init_size=512,
             div_half_dim=False,
             center_shift=200)),
-    discriminator=dict(num_scales=num_scales))
+    discriminator=dict(num_scales=num_scales),
+)
 
-train_cfg = dict(first_fixed_noises_ch=embedding_dim * 2)
+train_cfg = dict(
+    first_fixed_noises_ch=embedding_dim * 2,
+    noise_rs_mode='interp',
+    prev_rs_mode='interp',
+)

@@ -297,9 +297,9 @@ class SinGAN(BaseGAN):
             # here we do not padding fixed noises
             self.construct_fixed_noises()
 
-        curr_num_batches = max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 32)
-        self.reals = [real[:curr_num_batches] for real in self.reals]
-        data_batch['input_sample'] = data_batch['input_sample'][:curr_num_batches]
+        self.curr_num_batches = max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 32)
+        self.reals = [real[:self.curr_num_batches] for real in self.reals]
+        data_batch['input_sample'] = data_batch['input_sample'][:self.curr_num_batches]
  
         # disc training
         set_requires_grad(self.discriminator, True)
@@ -307,14 +307,11 @@ class SinGAN(BaseGAN):
         for _ in range(self.train_cfg['disc_steps']):
             optimizer['discriminator'].zero_grad()
             # TODO: add noise sampler to customize noise sampling
+
+            init_res, noises = self.res_noise_sampler(data_batch, sample_mode="rand")
+
             with torch.no_grad():
-                fake_imgs = self.generator(
-                    data_batch['input_sample'],
-                    self.fixed_noises,
-                    self.noise_weights,
-                    num_batches=curr_num_batches,
-                    rand_mode='rand',
-                    curr_scale=self.curr_stage)
+                fake_imgs = self.generate_fake(init_res, noises, rand_mode="rand")
 
             # disc pred for fake imgs and real_imgs
             disc_pred_fake = self.discriminator(fake_imgs.detach(),
@@ -350,30 +347,21 @@ class SinGAN(BaseGAN):
         for _ in range(self.train_cfg['generator_steps']):
             optimizer['generator'].zero_grad()
 
-            # TODO: add noise sampler to customize noise sampling
-            fake_imgs = self.generator(
-                data_batch['input_sample'],
-                self.fixed_noises,
-                self.noise_weights,
-                num_batches=curr_num_batches,
-                rand_mode='rand',
-                curr_scale=self.curr_stage)
-            disc_pred_fake_g = self.discriminator(
-                fake_imgs, curr_scale=self.curr_stage)
+            rand_init_res, rand_noises = self.res_noise_sampler(data_batch, sample_mode="rand")
+            rand_fake_imgs = self.generate_fake(rand_init_res, rand_noises, rand_mode="rand")
 
-            recon_imgs = self.generator(
-                data_batch['input_sample'],
-                self.fixed_noises,
-                self.noise_weights,
-                rand_mode='recon',
-                curr_scale=self.curr_stage)
+            disc_pred_fake_g = self.discriminator(
+                rand_fake_imgs, curr_scale=self.curr_stage)
+            
+            recon_init_res, recon_noises = self.res_noise_sampler(data_batch, sample_mode="recon")
+            recon_fake_imgs = self.generate_fake(recon_init_res, recon_noises, rand_mode="recon")
 
             data_dict_ = dict(
                 iteration=curr_iter,
                 gen=self.generator,
                 disc=self.discriminator,
-                fake_imgs=fake_imgs,
-                recon_imgs=recon_imgs,
+                fake_imgs=rand_fake_imgs,
+                recon_imgs=recon_fake_imgs,
                 real_imgs=self.reals[self.curr_stage],
                 disc_pred_fake_g=disc_pred_fake_g)
 
@@ -394,12 +382,8 @@ class SinGAN(BaseGAN):
                 == 0) and (self.curr_stage < len(self.reals) - 1):
 
             with torch.no_grad():
-                g_recon = self.generator(
-                    data_batch['input_sample'],
-                    self.fixed_noises,
-                    self.noise_weights,
-                    rand_mode='recon',
-                    curr_scale=self.curr_stage)
+                recon_init_res, recon_noises = self.res_noise_sampler(data_batch, sample_mode="recon")
+                g_recon = self.generate_fake(recon_init_res, recon_noises, rand_mode="recon")
                 if isinstance(g_recon, dict):
                     g_recon = g_recon['fake_img']
                 g_recon = F.interpolate(
@@ -418,9 +402,9 @@ class SinGAN(BaseGAN):
         log_vars.update(log_vars_disc)
 
         results = dict(
-            fake_imgs=fake_imgs.cpu(),
+            fake_imgs=rand_fake_imgs.cpu(),
             real_imgs=self.reals[self.curr_stage].cpu(),
-            recon_imgs=recon_imgs.cpu(),
+            recon_imgs=recon_fake_imgs.cpu(),
             curr_stage=self.curr_stage,
             fixed_noises=self.fixed_noises,
             noise_weights=self.noise_weights)
@@ -435,6 +419,18 @@ class SinGAN(BaseGAN):
 
         return outputs
 
+    def generate_fake(self, init_res, noises, rand_mode):
+        fake_imgs = self.generator(
+            init_res,
+            noises,
+            self.noise_weights,
+            num_batches=self.curr_num_batches,
+            rand_mode=rand_mode,
+            curr_scale=self.curr_stage)
+        return fake_imgs
+
+    def res_noise_sampler(self, data_batch, sample_mode=None):
+        return data_batch["input_sample"], self.fixed_noises
 
 @MODELS.register_module()
 class PESinGAN(SinGAN):
@@ -466,3 +462,60 @@ class PESinGAN(SinGAN):
             else:
                 noise = torch.zeros((1, 1, h, w)).to(real)
                 self.fixed_noises.append(noise)
+
+@MODELS.register_module()
+class PENFSinGAN(SinGAN):
+    """Positional Encoding in SinGAN.
+
+    This modified SinGAN is used to reimplement the experiments in: Positional
+    Encoding as Spatial Inductive Bias in GANs, CVPR2021.
+    """
+
+    def _parse_train_cfg(self):
+        super(PENFSinGAN, self)._parse_train_cfg()
+        self.first_fixed_noises_ch = self.train_cfg.get(
+            'first_fixed_noises_ch', 1)
+        self.noise_rs_mode = self.train_cfg.get(
+            'noise_rs_mode', 'pad')
+        self.prev_rs_mode = self.train_cfg.get(
+            'prev_rs_mode', 'pad')
+
+    def construct_fixed_noises(self):
+        """Construct the fixed noises list used in SinGAN."""
+        for i, real in enumerate(self.reals):
+            h, w = real.shape[-2:]
+            if i == 0:
+                noise = torch.randn(1, self.first_fixed_noises_ch, h,
+                                    w).to(real)
+                self.fixed_noises.append(noise)
+            else:
+                noise = torch.zeros((1, 1, h, w)).to(real)
+                self.fixed_noises.append(noise)
+
+    def generate_fake(self, init_res, noises, rand_mode, noise_rs_mode=None, prev_rs_mode=None):
+        if noise_rs_mode is None:
+            noise_rs_mode = self.noise_rs_mode
+        if prev_rs_mode is None:
+            prev_rs_mode = self.prev_rs_mode 
+
+        fake_imgs = self.generator(
+            init_res,
+            noises,
+            self.noise_weights,
+            num_batches=self.curr_num_batches,
+            curr_scale=self.curr_stage,
+            noise_rs_mode=noise_rs_mode,
+            prev_rs_mode=prev_rs_mode,
+        )
+        return fake_imgs       
+
+    def res_noise_sampler(self, data_batch, sample_mode):
+        init_res = data_batch["input_sample"]
+        if sample_mode == "rand":
+            noise = [torch.randn(self.curr_num_batches, *fn.shape[1:]).to(init_res).detach() 
+                        for fn in self.fixed_noises]
+        elif sample_mode == "recon":
+            noise = self.fixed_noises
+        else:
+            raise NotImplementedError("Unknwon sample mode")
+        return init_res, noise

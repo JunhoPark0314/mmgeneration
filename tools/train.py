@@ -8,7 +8,7 @@ import mmcv
 import torch
 from mmcv import Config, DictAction
 from mmcv.runner import get_dist_info, init_dist
-from mmcv.utils import get_git_hash
+from mmcv.utils import get_git_hash, logging
 
 from mmgen import __version__
 from mmgen.apis import set_random_seed, train_model
@@ -115,6 +115,8 @@ def main():
     timestamp = time.strftime('%Y%m%d_%H%M%S', time.localtime())
     log_file = osp.join(cfg.work_dir, f'{timestamp}.log')
     logger = get_root_logger(log_file=log_file, log_level=cfg.log_level)
+
+
 
     # init the meta dict to record some important information such as
     # environment info and seed, which will be logged

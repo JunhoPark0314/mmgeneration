@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import logging
+import sys
 
 from mmcv.utils import get_logger
 
@@ -26,4 +27,10 @@ def get_root_logger(log_file=None, log_level=logging.INFO, file_mode='w'):
     Returns:
         logging.Logger: The expected logger.
     """
-    return get_logger('mmgen', log_file, log_level, file_mode=file_mode)
+    logger = get_logger('mmgen', log_file, log_level, file_mode=file_mode)
+
+    for handler in logger.handlers:
+        if type(handler) is logging.StreamHandler:
+            handler.setStream(sys.stdout)
+    
+    return logger
