@@ -1,4 +1,4 @@
-_base_ = ['../../singan/singan_colusseum.py']
+_base_ = ['../../../singan/singan_colusseum.py']
 
 num_scales = 8  # start from zero
 model = dict(
