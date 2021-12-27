@@ -133,7 +133,8 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
                 num_batches=1,
                 get_prev_res=False,
                 noise_rs_mode="pad",
-                prev_rs_mode="pad"):
+                prev_rs_mode="pad",
+                pe_shift_mode=None):
         """Forward function.
 
         Args:
@@ -169,7 +170,7 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
             noise_rs = self.rescale_input(noise_, noise_rs_mode)
 
             if self.with_positional_encode and stage == 0:
-                head_grid = self.head_position_encode(noise_rs)
+                head_grid = self.head_position_encode(noise_rs, pe_shift_mode=pe_shift_mode)
                 noise_rs = noise_rs + head_grid
 
             assert g_res_rs.shape[-2:] == noise_rs.shape[-2:]

@@ -479,6 +479,8 @@ class PENFSinGAN(SinGAN):
             'noise_rs_mode', 'pad')
         self.prev_rs_mode = self.train_cfg.get(
             'prev_rs_mode', 'pad')
+        self.train_wi_rand_pe = self.train_cfg.get(
+            'train_wi_rand_pe', False)
 
     def construct_fixed_noises(self):
         """Construct the fixed noises list used in SinGAN."""
@@ -506,6 +508,7 @@ class PENFSinGAN(SinGAN):
             curr_scale=self.curr_stage,
             noise_rs_mode=noise_rs_mode,
             prev_rs_mode=prev_rs_mode,
+            pe_shift_mode=rand_mode if self.train_wi_rand_pe else None,
         )
         return fake_imgs       
 
