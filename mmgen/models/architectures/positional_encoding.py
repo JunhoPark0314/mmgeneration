@@ -38,7 +38,7 @@ class SinusoidalPositionalEmbedding(nn.Module):
                  padding_idx,
                  init_size=1024,
                  div_half_dim=False,
-                 center_shift=None):
+                 center_shift=None,):
         super().__init__()
         self.embedding_dim = embedding_dim
         self.padding_idx = padding_idx
@@ -162,7 +162,7 @@ class SinusoidalPositionalEmbedding(nn.Module):
         grid = torch.cat([x_grid, y_grid], dim=1)
         return grid.detach()
 
-    def make_grid2d_like(self, x, center_shift=None):
+    def make_grid2d_like(self, x, center_shift=None, pe_shift_mode=None):
         """Input tensor with shape of (b, ..., h, w) Return tensor with shape
         of (b, 2 x emb_dim, h, w)
 
@@ -205,7 +205,7 @@ class CatersianGrid(nn.Module):
 
         return grid
 
-    def make_grid2d_like(self, x, requires_grad=False):
+    def make_grid2d_like(self, x, requires_grad=False, pe_shift_mode=None):
         h, w = x.shape[-2:]
         grid = self.make_grid2d(h, w, x.size(0), requires_grad=requires_grad)
 
