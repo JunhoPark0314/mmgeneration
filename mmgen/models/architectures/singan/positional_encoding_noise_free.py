@@ -15,7 +15,6 @@ import torch.nn.functional as F
 import torch.fft as fft
 
 from mmgen.models.builder import MODULES, build_module
-from mmgen.models.layers import UpsampleLayer
 from .generator_discriminator import SinGANMultiScaleGenerator
 from .modules import GeneratorBlock
 
@@ -209,7 +208,7 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
             size = (size[0] + 2 * self.pad_head,
                     size[1] + 2 * self.pad_head)
             return self.upsample(x, size)
-        elif rescale_mode == "extrapolate":
+        elif rescale_mode == "extrap":
             fft_x = fft.fft2(x)
             fft_x_shift = fft.fftshift(fft_x)
             extra_fft_x_shift = nn.functional.pad(fft_x_shift, [self.pad_head, self.pad_head, self.pad_head, self.pad_head])

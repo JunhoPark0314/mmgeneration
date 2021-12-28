@@ -19,7 +19,6 @@ template_script = "python -m torch.distributed.launch --nproc_per_node  2 --mast
 
 WORK_ROOT = "output"
 unique_name = str.join('_', [args.cfg_json.split('.')[0], args.image])
-error_list = []
 cfg_name = os.path.basename(args.cfg_json).split('.')[0]
 
 for exp_dict in exp_list:
@@ -49,9 +48,9 @@ for exp_dict in exp_list:
 	out, error = p.communicate()
 	trace_list = error.split('Traceback')
 	exp_name = exp_dict["exp_name"].format(image=args.image, PE_low=args.PE.lower())
-	error_list.append("{}\n{}\n".format(exp_name, str.join('---------TRACE--------\n', trace_list)))
+	error_str = "{}\n{}\n{}\n".format(exp_name, str.join('---------TRACE--------\n', trace_list), '---------------------')
 
-log_file_path = os.path.join(WORK_ROOT, unique_name, args.PE.lower(), args.log_file)
-os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
-with open(log_file_path, "w") as lf:
-	lf.write(str.join('---------------------\n', error_list))
+	log_file_path = os.path.join(WORK_ROOT, unique_name, args.PE.lower(), args.log_file)
+	os.makedirs(os.path.dirname(log_file_path), exist_ok=True)
+	with open(log_file_path, "a") as lf:
+		lf.write(error_str)
