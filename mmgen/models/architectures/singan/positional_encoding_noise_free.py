@@ -198,6 +198,9 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
         return g_res
     
     def rescale_input(self, x, rescale_mode="pad"):
+        if type(rescale_mode) == str:
+            rescale_mode = rescale_mode.lower()
+
         if rescale_mode == "pad":
             return self.padding_layer(x)
         elif rescale_mode == "interp":
@@ -205,5 +208,7 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
             size = (size[0] + 2 * self.pad_head,
                     size[1] + 2 * self.pad_head)
             return self.upsample(x, size)
+        elif rescale_mode == "none":
+            return x
         else:
             raise NotImplementedError("Unknown rescale method")
