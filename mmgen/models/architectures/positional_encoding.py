@@ -302,9 +302,9 @@ class SinusoidalPositionalEmbedding3D(nn.Module):
         if pe_shift_mode == "rand":
             # 1. translation per axis
             translation_matrix = self._base_matrix.unsqueeze(0).repeat(num_batches//4, 1, 1)
-            translation_matrix[:,3,:3] = torch.randn(num_batches//4, 3) * torch.tensor([[[width, height, depth]]]) * 0.1
+            translation_matrix[:,3,:3] = torch.randn(num_batches//4, 3) * torch.tensor([[[width, height, depth]]]) * 0.05
             # 2. rotation per axis
-            theta = torch.randn(num_batches//4, 3).sigmoid() * math.pi / 2
+            theta = torch.randn(num_batches//4, 3).sigmoid() * 0.1 * math.pi / 2
             cos_theta = torch.cos(theta).view(-1, 1, 3)
             sin_theta = torch.cos(theta).view(-1, 1, 3)
             rot_matrix = torch.cat([cos_theta, -sin_theta, sin_theta, cos_theta], dim=1).view(-1, 2, 2, 3)
