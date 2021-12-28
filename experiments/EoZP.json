@@ -34,5 +34,16 @@
 			"train_cfg.prev_rs_mode": "pad",
 			"train_cfg.noise_rs_mode": "pad"
 		}
+	},
+	{
+		"exp_name": "SinGAN+{PE_low}-interp-interp-convzp+{image}",
+		"cfg_file": "configs/positional_encoding_in_gans/EoZP/{PE}/singan_{PE_low}-interp-interp_{image}.py",
+		"cfg_opt": {
+			"data.samples_per_gpu":"256",
+			"_train_cfg.iters_per_scale":"1",
+			"train_cfg.prev_rs_mode": "none",
+			"train_cfg.noise_rs_mode": "none",
+			"model.generator.padding": "1"
+		}
 	}
 ]
