@@ -9,6 +9,7 @@ parser.add_argument("--log-file", type=str, default="log.txt")
 parser.add_argument("--debug", action="store_true")
 parser.add_argument("--image", type=str, default="balloons")
 parser.add_argument("--PE", type=str, default="IMP")
+parser.add_argument("--query", type=str, nargs='+', default=[])
 
 args = parser.parse_args()
 with open(args.cfg_json) as cf:
@@ -28,6 +29,9 @@ for exp_dict in exp_list:
 	exp_end = os.path.isdir(os.path.join(work_dir, "final"))
 
 	if exp_end:
+		continue
+
+	if len(args.query) and any(x in exp_name for x in args.query) is False:
 		continue
 
 	cfg_file = exp_dict["cfg_file"].format(image=args.image, PE=args.PE, PE_low=args.PE.lower())

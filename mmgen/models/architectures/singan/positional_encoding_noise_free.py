@@ -12,11 +12,12 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import torch.fft as fft
 
 from mmgen.models.builder import MODULES, build_module
+from mmgen.models.layers import UpsampleLayer
 from .generator_discriminator import SinGANMultiScaleGenerator
 from .modules import GeneratorBlock
-
 
 @MODULES.register_module()
 class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
@@ -198,7 +199,7 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
         return g_res
     
     def rescale_input(self, x, rescale_mode="pad"):
-        if type(rescale_mode) == str:
+        if isinstance(rescale_mode, str):
             rescale_mode = rescale_mode.lower()
 
         if rescale_mode == "pad":
@@ -208,6 +209,13 @@ class SinGANMSGeneratorPENF(SinGANMultiScaleGenerator):
             size = (size[0] + 2 * self.pad_head,
                     size[1] + 2 * self.pad_head)
             return self.upsample(x, size)
+        elif rescale_mode == "extrapolate":
+            fft_x = fft.fft2(x)
+            fft_x_shift = fft.fftshift(fft_x)
+            extra_fft_x_shift = nn.functional.pad(fft_x_shift, [self.pad_head, self.pad_head, self.pad_head, self.pad_head])
+            extra_fft_x = fft.ifftshift(extra_fft_x_shift)
+            extra_x = fft.ifft2(extra_fft_x).real
+            return extra_x
         elif rescale_mode == "none":
             return x
         else:

@@ -297,7 +297,7 @@ class SinGAN(BaseGAN):
             # here we do not padding fixed noises
             self.construct_fixed_noises()
 
-        self.curr_num_batches = max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 32)
+        self.curr_num_batches = max(self.train_cfg.num_batches // 2 ** (self.curr_stage), 16)
         self.reals = [real[:self.curr_num_batches] for real in self.reals]
         data_batch['input_sample'] = data_batch['input_sample'][:self.curr_num_batches]
  
